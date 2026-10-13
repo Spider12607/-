@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宣传部招新副本 · 欢迎新冒险家</title>
+<link rel="preconnect" href="https://miaoda.feishu.cn">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Press+Start+2P&family=Noto+Sans+SC:wght@400;500;700;900&display=swap">
+<style>
+/* ===== 像素主题变量 ===== */
+:root{
+  --ink:#332b4a;           /* 深描边 */
+  --ink2:#241d38;
+  --panel:#fff8ec;         /* 面板米白 */
+  --panel2:#ffeef6;
+  --sky:#8ed0ef;
+  --sky2:#a8e0f4;
+  --pink:#ffb1ce;
+  --pink2:#ff7fb1;
+  --purple:#b08cf0;
+  --purple2:#8a5ed6;
+  --green:#9ce0a0;
+  --green2:#5fbf70;
+  --yellow:#ffd98a;
+  --yellow2:#ffb84d;
+  --blue:#8ec6f0;
+  --red:#ff8f9e;
+  --muted:#8a7f9e;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--ink);
+  color:var(--ink);
+  line-height:1.7;
+  overflow-x:hidden;
+  -webkit-font-smoothing:none;
+}
+img,svg{image-rendering:pixelated;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+::selection{background:var(--purple);color:#fff;}
+
+/* ===== 像素通用 ===== */
+.pixel-border{
+  border:4px solid var(--ink);
+  box-shadow:6px 6px 0 rgba(51,43,74,.9);
+}
+.pixel-shadow{box-shadow:5px 5px 0 rgba(51,43,74,.55);}
+.hard-shadow{box-shadow:0 0 0 4px var(--ink);}
+.outline-text{
+  -webkit-text-stroke:2px var(--ink);
+  paint-order:stroke fill;
+}
+.fw9{font-weight:900;}
+
+/* ===== 全屏舞台：每页一个 view ===== */
+.view{display:none;min-height:100vh;position:relative;}
+.view.active{display:block;}
+
+/* 桌面图标区 */
+.desktop-icons{
+  position:fixed;top:18px;right:18px;z-index:60;
+  display:flex;gap:16px;
+}
+.desk-icon{
+  width:56px;text-align:center;font-size:9px;color:#fff;
+  text-shadow:1px 1px 0 rgba(0,0,0,.4);cursor:pointer;
+  transition:transform .12s;
+}
+.desk-icon:hover{transform:translateY(-3px);}
+.desk-icon .ic{
+  width:56px;height:44px;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;
+  background:var(--panel);border:3px solid var(--ink);box-shadow:3px 3px 0 rgba(0,0,0,.35);
+}
+.desk-icon .ic svg{width:34px;height:34px;}
+
+/* ===== 顶部任务栏（导航） ===== */
+.taskbar{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  height:54px;background:linear-gradient(var(--panel),#e6dcf5);
+  border-top:4px solid var(--ink);
+  display:flex;align-items:center;gap:6px;padding:0 10px;
+  box-shadow:0 -4px 0 rgba(0,0,0,.12);
+}
+.taskbar .start-btn{
+  display:flex;align-items:center;gap:8px;
+  background:var(--purple2);color:#fff;font-weight:900;font-size:14px;
+  border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);
+}
+.taskbar .start-btn:hover{filter:brightness(1.1);}
+.taskbar .start-btn svg{width:18px;height:18px;}
+.taskbar nav{display:flex;gap:4px;flex:1;overflow-x:auto;}
+.taskbar .nav-link{
+  flex:0 0 auto;padding:6px 12px;font-size:13px;font-weight:700;
+  border:3px solid var(--ink);background:#fff;box-shadow:2px 2px 0 rgba(0,0,0,.25);
+  color:var(--ink);white-space:nowrap;
+}
+.taskbar .nav-link:hover{background:var(--yellow);}
+.taskbar .nav-link.on{background:var(--pink);color:#fff;box-shadow:inset 2px 2px 0 rgba(0,0,0,.25);}
+.taskbar .tray{display:flex;gap:6px;align-items:center;font-size:11px;color:#5a5170;padding-right:4px;}
+.taskbar .tray .mini{width:14px;height:14px;background:#7dff9a;border:2px solid var(--ink);}
+.taskbar .clock{font-weight:700;background:#fff;border:3px solid var(--ink);padding:3px 8px;}
+
+/* ===== 各页公共头部 ===== */
+.page-head{
+  text-align:center;padding:70px 16px 8px;
+}
+.page-head .head-title{
+  display:inline-flex;align-items:center;gap:12px;
+  font-size:clamp(26px,5vw,40px);font-weight:900;color:#fff;
+  text-shadow:3px 3px 0 var(--ink);
+}
+.page-head .head-title .heart{font-size:30px;color:var(--pink);text-shadow:2px 2px 0 var(--ink);}
+.page-head .head-en{
+  font-family:"Press Start 2P",monospace;font-size:12px;color:var(--yellow2);
+  letter-spacing:1px;margin-top:6px;text-shadow:2px 2px 0 var(--ink);
+}
+.screen-inner{max-width:1100px;margin:0 auto;padding:16px 16px 90px;}
+
+/* 像素背景天空 */
+.sky-bg{
+  position:absolute;inset:0;z-index:-1;overflow:hidden;
+  background:linear-gradient(to bottom,var(--sky) 0%,var(--sky2) 45%,#c8f0e6 100%);
+}
+.sky-bg .cloud{position:absolute;opacity:.95;}
+.sky-bg .gnd{
+  position:absolute;left:0;right:0;bottom:60px;height:110px;
+  background:linear-gradient(var(--green) 0 60%,var(--green2) 60% 100%);
+}
+.sky-bg .gnd::before{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:34px;
+  background:repeating-linear-gradient(0deg,#7bbf88 0 10px,#6cb07c 10px 20px);
+}
+.sky-bg .tree{position:absolute;bottom:150px;}
+
+/* ===== HOME 页 ===== */
+#home .hero{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:100vh;text-align:center;padding:24px;position:relative;
+}
+.hero .hi{
+  font-family:"Press Start 2P",monospace;font-size:14px;color:var(--yellow2);
+  text-shadow:2px 2px 0 var(--ink);letter-spacing:2px;margin-bottom:10px;
+}
+.hero .title{
+  font-size:clamp(38px,8vw,72px);font-weight:900;color:#fff;
+  text-shadow:4px 4px 0 var(--ink),8px 8px 0 rgba(51,43,74,.5);
+  line-height:1.15;
+}
+.hero .sub{
+  font-family:"Press Start 2P",monospace;font-size:13px;color:var(--pink);
+  text-shadow:2px 2px 0 var(--ink);margin-top:14px;letter-spacing:2px;
+}
+.hero .chars{display:flex;gap:8px;align-items:flex-end;margin:26px 0 8px;}
+.hero .chars svg{width:120px;height:150px;filter:drop-shadow(4px 4px 0 rgba(0,0,0,.25));}
+
+.btn-start{
+  margin-top:18px;font-family:"Press Start 2P",monospace;font-size:16px;color:#fff;
+  background:var(--pink2);border:5px solid var(--ink);
+  padding:16px 46px;box-shadow:6px 6px 0 var(--ink),0 0 0 6px #fff inset;
+  transition:transform .1s;
+}
+.btn-start:hover{transform:translate(-2px,-2px);}
+.btn-start:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink);}
+.btn-start.blink{animation:blink 1.2s steps(2,end) infinite;}
+@keyframes blink{50%{background:var(--yellow2);color:var(--ink);}}
+
+/* ===== 关卡选择页：翻转卡片 ===== */
+.levels-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:22px;
+  margin-top:22px;perspective:1200px;
+}
+.flip-card{height:250px;cursor:pointer;}
+.flip-inner{
+  position:relative;width:100%;height:100%;
+  transition:transform .6s cubic-bezier(.2,.7,.3,1.1);
+  transform-style:preserve-3d;
+}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+.flip-face{
+  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border:5px solid var(--ink);box-shadow:6px 6px 0 var(--ink);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;
+}
+.flip-front{background:var(--panel);}
+.flip-front .num{font-family:"Press Start 2P",monospace;font-size:30px;color:var(--purple2);text-shadow:2px 2px 0 #fff;}
+.flip-front .nm{font-size:20px;font-weight:900;margin-top:10px;}
+.flip-front .hint{margin-top:8px;font-size:11px;color:var(--muted);font-family:"Press Start 2P",monospace;letter-spacing:1px;}
+.flip-back{background:var(--panel2);transform:rotateY(180deg);}
+.flip-back .bt{font-size:17px;font-weight:900;color:var(--purple2);margin-bottom:8px;}
+.flip-back p{font-size:13px;color:#5a5170;margin-bottom:14px;}
+.flip-back .go{
+  font-size:13px;font-weight:900;color:#fff;background:var(--purple2);
+  border:3px solid var(--ink);padding:6px 14px;box-shadow:3px 3px 0 var(--ink);
+}
+.flip-back .go:hover{background:var(--pink2);}
+.rotate-hint{text-align:center;margin-top:20px;font-size:12px;color:#5a5170;}
+.rotate-hint b{color:var(--purple2);}
+
+/* 关卡编号配色 */
+.lv-1 .flip-front{background:var(--pink);}
+.lv-1 .flip-front .nm{color:#fff;text-shadow:2px 2px 0 var(--ink);}
+.lv-2 .flip-front{background:var(--sky);}
+.lv-3 .flip-front{background:var(--yellow);}
+.lv-4 .flip-front{background:var(--green);}
+
+/* ===== 成员卡片（翻转） ===== */
+.members-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:22px;perspective:1200px;}
+.member-card{height:280px;cursor:pointer;}
+.member-card .flip-inner{transition:transform .6s cubic-bezier(.2,.7,.3,1.1);transform-style:preserve-3d;}
+.member-card.flipped .flip-inner{transform:rotateY(180deg);}
+.member-card .flip-face{border:5px solid var(--ink);box-shadow:6px 6px 0 var(--ink);backface-visibility:hidden;}
+.member-card .flip-front{background:var(--panel);}
+.member-card .flip-back{background:#fff0f7;transform:rotateY(180deg);}
+.member-ava{width:86px;height:86px;margin-bottom:10px;}
+.member-card .role{font-family:"Press Start 2P",monospace;font-size:11px;color:var(--purple2);}
+.member-card .pname{font-size:20px;font-weight:900;margin-top:6px;}
+.member-card .tag{font-size:12px;color:var(--muted);margin-top:4px;}
+.member-card .duty{font-size:13px;color:#5a5170;text-align:center;}
+.member-card .back-nm{font-size:17px;font-weight:900;color:var(--pink2);margin-bottom:8px;}
+
+/* ===== 内容面板 ===== */
+.panel-box{
+  background:var(--panel);border:5px solid var(--ink);box-shadow:6px 6px 0 var(--ink);
+  padding:26px 30px;
+}
+.panel-box .sec-tit{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:900;margin-bottom:14px;color:var(--purple2);}
+.creed{
+  display:inline-block;margin-top:10px;font-size:18px;font-weight:900;color:var(--ink);
+  background:var(--yellow);border:3px solid var(--ink);padding:8px 18px;box-shadow:4px 4px 0 var(--ink);
+}
+.chip{
+  display:inline-block;font-size:12px;font-weight:700;color:var(--purple2);
+  background:#fff;border:3px solid var(--ink);padding:3px 10px;box-shadow:2px 2px 0 var(--ink);
+}
+
+/* 任务板块 */
+.task-row{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:22px;}
+.task-tile{background:var(--panel);border:5px solid var(--ink);box-shadow:6px 6px 0 var(--ink);padding:20px;}
+.task-tile .ic{width:56px;height:56px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;background:var(--sky);border:4px solid var(--ink);}
+.task-tile .ic svg{width:36px;height:36px;}
+.task-tile h4{font-size:18px;font-weight:900;text-align:center;margin-bottom:10px;}
+.task-tile p{font-size:13px;color:#5a5170;}
+
+/* 福利双屏（复古电视） */
+.tv-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:22px;}
+.tv{
+  background:var(--ink2);border:6px solid var(--ink);border-radius:14px 14px 8px 8px;
+  padding:14px;box-shadow:6px 6px 0 rgba(0,0,0,.35);
+}
+.tv .screen{position:relative;height:190px;border:4px solid #0b0a12;overflow:hidden;}
+.tv .screen img, .tv .screen .ph{width:100%;height:100%;object-fit:cover;}
+.tv .tv-tit{text-align:center;color:var(--pink2);font-weight:900;font-size:17px;margin-bottom:10px;font-family:"Press Start 2P",monospace;font-size:13px;}
+.tv .ctrl{display:flex;justify-content:flex-end;gap:6px;margin-top:8px;}
+.tv .ctrl span{width:14px;height:14px;border:2px solid #fff;}
+.tv .ctrl .g{background:var(--green2);}
+.tv .ctrl .o{background:var(--yellow2);}
+
+/* 日常三窗 */
+.daily-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:22px;}
+.daily-window{background:var(--panel);border:5px solid var(--ink);box-shadow:6px 6px 0 var(--ink);}
+.daily-window .bar{background:var(--purple2);color:#fff;display:flex;justify-content:space-between;align-items:center;padding:5px 10px;font-weight:900;font-size:13px;border-bottom:4px solid var(--ink);}
+.daily-window .bar .btns{display:flex;gap:4px;}
+.daily-window .bar .btns i{width:13px;height:13px;border:2px solid #fff;}
+.daily-window .bar .btns i:first-child{background:var(--green2);}
+.daily-window .bar .btns i:nth-child(2){background:var(--yellow2);}
+.daily-window .bar .btns i:nth-child(3){background:var(--red);}
+.daily-window .body{height:150px;position:relative;overflow:hidden;}
+
+/* 奖励列表 */
+.reward-list{margin-top:22px;display:flex;flex-direction:column;gap:16px;}
+.reward-item{display:flex;gap:16px;align-items:flex-start;background:var(--panel2);border:5px solid var(--ink);box-shadow:6px 6px 0 var(--ink);padding:16px 20px;}
+.reward-item .rk{font-family:"Press Start 2P",monospace;font-size:11px;color:#fff;background:var(--purple2);border:3px solid var(--ink);padding:6px 10px;flex:0 0 auto;box-shadow:2px 2px 0 var(--ink);}
+.reward-item b{font-size:16px;}
+.reward-item p{font-size:13px;color:#5a5170;}
+
+/* 招募条件 气泡 */
+.cond-list{margin-top:22px;display:flex;flex-direction:column;gap:18px;}
+.cond-bubble{position:relative;background:#fff;border:5px solid var(--ink);box-shadow:6px 6px 0 var(--ink);padding:18px 22px;font-size:15px;font-weight:700;}
+.cond-bubble::before{
+  content:"";position:absolute;left:26px;bottom:-16px;width:0;height:0;
+  border-left:10px solid transparent;border-right:10px solid transparent;border-top:16px solid var(--ink);
+}
+.cond-bubble b{color:var(--purple2);}
+.cond-num{font-family:"Press Start 2P",monospace;font-size:12px;color:var(--red);margin-right:6px;}
+
+/* 加入阵营 */
+.join-wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;margin-top:22px;align-items:stretch;}
+.join-panel{background:var(--panel);border:5px solid var(--ink);box-shadow:6px 6px 0 var(--ink);padding:24px;}
+.join-panel h3{font-size:20px;font-weight:900;color:var(--purple2);margin-bottom:12px;}
+.join-panel .info{font-size:14px;line-height:2;}
+.join-panel .info b{color:var(--red);}
+.qr-box{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  background:var(--panel2);border:5px solid var(--ink);box-shadow:6px 6px 0 var(--ink);padding:20px;
+}
+.qr-box .qr{
+  width:150px;height:150px;background:#fff;border:4px solid var(--ink);
+  display:grid;grid-template-columns:repeat(11,1fr);grid-template-rows:repeat(11,1fr);gap:0;padding:6px;
+}
+.qr-box .qr i{background:var(--ink);}
+.qr-box .qr i.blank{background:#fff;}
+.qr-box .qr-tip{font-family:"Press Start 2P",monospace;font-size:11px;color:var(--purple2);text-align:center;line-height:1.8;}
+.qr-box .btn-join{font-size:14px;font-weight:900;color:#fff;background:var(--green2);border:3px solid var(--ink);padding:8px 18px;box-shadow:3px 3px 0 var(--ink);}
+.qr-box .btn-join:hover{background:var(--pink2);}
+
+/* 页面内导航按钮 */
+.pagerow{display:flex;gap:12px;justify-content:center;margin-top:26px;flex-wrap:wrap;}
+.btn-nav{font-size:13px;font-weight:900;background:var(--purple2);color:#fff;border:3px solid var(--ink);padding:8px 16px;box-shadow:3px 3px 0 var(--ink);}
+.btn-nav.alt{background:#fff;color:var(--ink);}
+.btn-nav:hover{filter:brightness(1.12);}
+
+/* ===== 动画：欢迎入场 ===== */
+.pop{animation:pop .5s cubic-bezier(.2,.7,.3,1.1) both;}
+@keyframes pop{from{transform:scale(.85);opacity:0;}to{transform:scale(1);opacity:1;}}
+.stagger>*{animation:pop .5s cubic-bezier(.2,.7,.3,1.1) both;}
+.stagger>*:nth-child(1){animation-delay:.05s;}
+.stagger>*:nth-child(2){animation-delay:.12s;}
+.stagger>*:nth-child(3){animation-delay:.19s;}
+.stagger>*:nth-child(4){animation-delay:.26s;}
+.stagger>*:nth-child(5){animation-delay:.33s;}
+.stagger>*:nth-child(6){animation-delay:.4s;}
+
+/* 加载转场 */
+.loading-splash{
+  position:fixed;inset:0;z-index:200;background:linear-gradient(to bottom,var(--sky),#c8f0e6);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.loading-splash.show{opacity:1;pointer-events:auto;}
+.loading-splash .l-tit{font-family:"Press Start 2P",monospace;font-size:22px;color:var(--ink);}
+.loading-splash .l-sub{font-family:"Press Start 2P",monospace;font-size:12px;color:var(--purple2);}
+.loading-splash .bar{width:260px;height:20px;border:4px solid var(--ink);background:#fff;position:relative;overflow:hidden;}
+.loading-splash .bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--pink2);animation:load 1s ease forwards;}
+@keyframes load{to{width:100%;}}
+
+/* 响应式 */
+@media(max-width:960px){
+  .levels-grid,.members-grid{grid-template-columns:repeat(2,1fr);}
+  .task-row,.daily-grid{grid-template-columns:1fr;}
+  .tv-grid,.join-wrap{grid-template-columns:1fr;}
+}
+@media(max-width:560px){
+  .levels-grid,.members-grid{grid-template-columns:1fr;}
+  .flip-card,.member-card{height:230px;}
+  .desktop-icons{display:none;}
+  .taskbar .start-btn span{display:none;}
+  .taskbar .nav-link{padding:5px 9px;font-size:12px;}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;}
+}
+:focus-visible{outline:3px solid var(--yellow2);outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<!-- 桌面图标 -->
+<div class="desktop-icons">
+  <div class="desk-icon" onclick="toast('文件夹 · 宣传部资料')"><div class="ic"><svg viewBox="0 0 24 24"><path fill="#ffcf5a" d="M3 5h6l2 2h10v3H3z"/><path fill="#ffb84d" d="M3 9h18v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/></svg></div>资料</div>
+  <div class="desk-icon" onclick="toast('电脑 · 招新后台')"><div class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="11" fill="#8ec6f0"/><rect x="6" y="6" width="12" height="7" fill="#fff"/><rect x="8" y="16" width="8" height="2" fill="#555"/></svg></div>后台</div>
+  <div class="desk-icon" onclick="toast('记事本 · 报名登记')"><div class="ic"><svg viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" fill="#fff" stroke="#333"/><rect x="9" y="6" width="6" height="2" fill="#ffb84d"/><rect x="9" y="10" width="6" height="2" fill="#8ec6f0"/></svg></div>报名</div>
+  <div class="desk-icon" onclick="toast('回收站 · 已清空')"><div class="ic"><svg viewBox="0 0 24 24"><path fill="#cfd6e6" d="M5 7h14l-1 14H6z"/><path fill="#aeb8cc" d="M4 4h16v4H4z"/></svg></div>回收站</div>
+</div>
+
+<!-- 加载转场 -->
+<div class="loading-splash" id="splash">
+  <div class="l-tit">LOADING</div>
+  <div class="l-sub">进入新副本...</div>
+  <div class="bar"><i></i></div>
+</div>
+
+<!-- ===== 视图：HOME ===== -->
+<section class="view active" id="home">
+  <div class="sky-bg">
+    <svg class="cloud" style="top:8%;left:6%;width:90px" viewBox="0 0 100 40"><rect x="0" y="20" width="100" height="16" fill="#fff" opacity=".9"/><rect x="12" y="8" width="24" height="18" fill="#fff" opacity=".9"/><rect x="48" y="2" width="26" height="22" fill="#fff" opacity=".9"/><rect x="76" y="12" width="18" height="14" fill="#fff" opacity=".9"/></svg>
+    <svg class="cloud" style="top:18%;right:8%;width:120px" viewBox="0 0 120 40"><rect x="0" y="22" width="120" height="14" fill="#fff" opacity=".85"/><rect x="14" y="10" width="28" height="18" fill="#fff" opacity=".85"/><rect x="58" y="4" width="30" height="20" fill="#fff" opacity=".85"/><rect x="92" y="14" width="20" height="12" fill="#fff" opacity=".85"/></svg>
+    <svg class="tree" style="left:6%;" width="120" height="170" viewBox="0 0 60 90"><rect x="26" y="58" width="9" height="30" fill="#8a5ed6"/><circle cx="30" cy="38" r="18" fill="#5fbf70"/><circle cx="14" cy="52" r="12" fill="#5fbf70"/><circle cx="46" cy="52" r="12" fill="#5fbf70"/></svg>
+    <svg class="tree" style="right:8%;" width="140" height="200" viewBox="0 0 70 100"><rect x="30" y="66" width="10" height="32" fill="#8a5ed6"/><circle cx="35" cy="42" r="22" fill="#7cc98a"/><circle cx="14" cy="60" r="14" fill="#7cc98a"/><circle cx="56" cy="60" r="14" fill="#7cc98a"/></svg>
+    <div class="gnd"></div>
+  </div>
+
+  <div class="hero">
+    <div class="hi">HELLO</div>
+    <div class="title">欢迎新冒险家</div>
+    <div class="sub">宣传部招新副本 · START</div>
+    <div class="chars">
+      <!-- 红发角色 -->
+      <svg viewBox="0 0 60 80">
+        <rect x="22" y="2" width="16" height="12" fill="#ff7fb1"/><rect x="20" y="0" width="6" height="16" fill="#ffb1ce"/><rect x="34" y="0" width="6" height="16" fill="#ffb1ce"/>
+        <rect x="24" y="12" width="12" height="10" fill="#ffd9c2"/><rect x="22" y="22" width="4" height="4" fill="#333"/><rect x="34" y="22" width="4" height="4" fill="#333"/>
+        <rect x="27" y="28" width="6" height="3" fill="#ff7fb1"/>
+        <rect x="22" y="32" width="16" height="14" fill="#ff5f9e"/><rect x="18" y="44" width="5" height="12" fill="#ffb1ce"/><rect x="37" y="44" width="5" height="12" fill="#ffb1ce"/>
+        <rect x="22" y="46" width="16" height="16" fill="#7c5cd6"/><rect x="20" y="62" width="20" height="16" fill="#5a3fae"/>
+      </svg>
+      <!-- 黑发角色 -->
+      <svg viewBox="0 0 60 80">
+        <rect x="20" y="2" width="20" height="14" fill="#332b4a"/><rect x="22" y="12" width="16" height="10" fill="#ffd9c2"/><rect x="20" y="22" width="4" height="4" fill="#333"/><rect x="36" y="22" width="4" height="4" fill="#333"/>
+        <rect x="26" y="28" width="8" height="3" fill="#332b4a"/>
+        <rect x="22" y="32" width="16" height="14" fill="#6f86e0"/><rect x="18" y="44" width="5" height="12" fill="#ffd9c2"/><rect x="37" y="44" width="5" height="12" fill="#ffd9c2"/>
+        <rect x="22" y="46" width="16" height="16" fill="#4a3a70"/><rect x="20" y="62" width="20" height="16" fill="#332b4a"/>
+      </svg>
+    </div>
+    <button class="btn-start blink" onclick="go('#levels')">START</button>
+    <div class="rotate-hint" style="margin-top:26px;color:#fff;text-shadow:1px 1px 0 rgba(0,0,0,.5);">校园宣传部 · 等你来当造梦者</div>
+  </div>
+</section>
+
+<!-- ===== 视图：关卡选择 ===== -->
+<section class="view" id="levels">
+  <div class="sky-bg"><div class="gnd"></div></div>
+  <div class="page-head">
+    <div class="head-title"><span class="heart">♥</span>关卡 · 宣传部新手指引<span class="heart">♥</span></div>
+    <div class="head-en">NEWCOMER GUIDE</div>
+  </div>
+  <div class="screen-inner">
+    <div class="levels-grid stagger">
+      <div class="flip-card lv-1" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-face flip-front"><div class="num">01</div><div class="nm">阵营介绍</div><div class="hint">CLICK TO FLIP</div></div>
+          <div class="flip-face flip-back"><div class="bt">阵营介绍</div><p>先来认识宣传部，了解这个"校园造梦工坊"是做什么的。</p><button class="go" onclick="event.stopPropagation();go('#intro')">进入 &gt;</button></div>
+        </div>
+      </div>
+      <div class="flip-card lv-2" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-face flip-front"><div class="num">02</div><div class="nm">任务介绍</div><div class="hint">CLICK TO FLIP</div></div>
+          <div class="flip-face flip-back"><div class="bt">任务介绍</div><p>视觉、新媒体、拍摄三大主线任务，解锁你的宣传技能。</p><button class="go" onclick="event.stopPropagation();go('#tasks')">进入 &gt;</button></div>
+        </div>
+      </div>
+      <div class="flip-card lv-3" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-face flip-front"><div class="num">03</div><div class="nm">阵营风光实录</div><div class="hint">CLICK TO FLIP</div></div>
+          <div class="flip-face flip-back"><div class="bt">风光实录</div><p>看看宣传部的福利与日常，团建奶茶加部门联谊。</p><button class="go" onclick="event.stopPropagation();go('#scenery')">进入 &gt;</button></div>
+        </div>
+      </div>
+      <div class="flip-card lv-4" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-face flip-front"><div class="num">04</div><div class="nm">招募冒险家</div><div class="hint">CLICK TO FLIP</div></div>
+          <div class="flip-face flip-back"><div class="bt">招募冒险家</div><p>了解通关奖励与招募条件，马上注册加入阵营。</p><button class="go" onclick="event.stopPropagation();go('#recruit')">进入 &gt;</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="rotate-hint">点击卡片可<b>翻转</b>查看详情，点击"进入"解锁对应副本</div>
+  </div>
+</section>
+
+<!-- ===== 视图：阵营介绍 ===== -->
+<section class="view" id="intro">
+  <div class="sky-bg"><div class="gnd"></div></div>
+  <div class="page-head">
+    <div class="head-title"><span class="heart">♥</span>阵营介绍<span class="heart">♥</span></div>
+    <div class="head-en">FACTION INTRO</div>
+  </div>
+  <div class="screen-inner">
+    <div class="panel-box pop">
+      <div class="sec-tit"><span class="chip">宣传部</span>校园大世界的"宣传造梦公会"</div>
+      <p style="font-size:15px;font-weight:700;margin-bottom:10px;">宣传部是校园里最会"讲故事"的阵营，是校园舞台背后的造梦工坊。</p>
+      <p style="font-size:14px;color:#5a5170;margin-bottom:14px;">作为学生会宣传的主力阵营，我们负责策划、制作校园宣传物料，运营新媒体平台，用海报、摄影、视频把校园生活的精彩瞬间呈现在全体校园玩家面前。</p>
+      <div style="text-align:center;"><span class="creed">阵营核心信条："宣你所想，传你所爱"</span></div>
+      <p style="font-size:13px;color:#8a7f9e;margin-top:18px;">我们负责运营公众号、设计视觉物料、记录校园高光时刻，给全体校园玩家打造一个"看得见、记得住"的活力校园氛围。</p>
+    </div>
+
+    <div class="page-head" style="padding-top:44px;">
+      <div class="head-title"><span class="heart">♥</span>成员介绍<span class="heart">♥</span></div>
+      <div class="head-en">MEMBER LIST</div>
+    </div>
+    <div class="members-grid stagger" id="memberGrid">
+      <div class="member-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <svg class="member-ava" viewBox="0 0 80 80"><rect x="24" y="6" width="32" height="18" fill="#332b4a"/><rect x="28" y="22" width="24" height="16" fill="#ffd9c2"/><rect x="30" y="38" width="20" height="24" fill="#ff7fb1"/><rect x="26" y="62" width="28" height="14" fill="#7c5cd6"/></svg>
+            <div class="role">PLAYER 1</div>
+            <div class="pname">一号玩家</div>
+            <div class="tag">部长</div>
+          </div>
+          <div class="flip-face flip-back"><div class="back-nm">一号玩家 · 部长</div><div class="duty">总揽宣传部全局，统筹招新、对接学生会，新手任务的最高指引人。</div></div>
+        </div>
+      </div>
+      <div class="member-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <svg class="member-ava" viewBox="0 0 80 80"><rect x="24" y="6" width="32" height="18" fill="#6f86e0"/><rect x="28" y="22" width="24" height="16" fill="#ffd9c2"/><rect x="30" y="38" width="20" height="24" fill="#8ec6f0"/><rect x="26" y="62" width="28" height="14" fill="#4a3a70"/></svg>
+            <div class="role">PLAYER 2</div>
+            <div class="pname">二号玩家</div>
+            <div class="tag">副部长</div>
+          </div>
+          <div class="flip-face flip-back"><div class="back-nm">二号玩家 · 副部长</div><div class="duty">分管新媒体与文案，带教新人，负责内容策划与部门内训。</div></div>
+        </div>
+      </div>
+      <div class="member-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <svg class="member-ava" viewBox="0 0 80 80"><rect x="24" y="6" width="32" height="18" fill="#ff7fb1"/><rect x="28" y="22" width="24" height="16" fill="#ffd9c2"/><rect x="30" y="38" width="20" height="24" fill="#ffb84d"/><rect x="26" y="62" width="28" height="14" fill="#a8763a"/></svg>
+            <div class="role">PLAYER 3</div>
+            <div class="pname">三号玩家</div>
+            <div class="tag">干事 · 视觉</div>
+          </div>
+          <div class="flip-face flip-back"><div class="back-nm">三号玩家 · 视觉干事</div><div class="duty">海报设计、物料制作，负责宣传部视觉门面的每一张图。</div></div>
+        </div>
+      </div>
+      <div class="member-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <svg class="member-ava" viewBox="0 0 80 80"><rect x="24" y="6" width="32" height="18" fill="#5fbf70"/><rect x="28" y="22" width="24" height="16" fill="#ffd9c2"/><rect x="30" y="38" width="20" height="24" fill="#9ce0a0"/><rect x="26" y="62" width="28" height="14" fill="#3f8f52"/></svg>
+            <div class="role">PLAYER 4</div>
+            <div class="pname">四号玩家</div>
+            <div class="tag">干事 · 拍摄</div>
+          </div>
+          <div class="flip-face flip-back"><div class="back-nm">四号玩家 · 拍摄干事</div><div class="duty">活动拍摄、视频剪辑，记录校园每个高光瞬间。</div></div>
+        </div>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:22px;font-size:13px;color:var(--muted);">你的新手任务指引，将由他们负责</p>
+    <div class="pagerow"><button class="btn-nav" onclick="go('#levels')">返回关卡</button><button class="btn-nav alt" onclick="go('#tasks')">进入任务介绍</button></div>
+  </div>
+</section>
+
+<!-- ===== 视图：任务介绍 ===== -->
+<section class="view" id="tasks">
+  <div class="sky-bg"><div class="gnd"></div></div>
+  <div class="page-head">
+    <div class="head-title"><span class="heart">♥</span>任务介绍<span class="heart">♥</span></div>
+    <div class="head-en">PART TWO · TASK INTRO</div>
+  </div>
+  <div class="screen-inner">
+    <div style="text-align:center;margin-bottom:6px;" class="pop"><span class="chip" style="font-size:14px;">三大主线任务</span></div>
+    <div class="task-row stagger">
+      <div class="task-tile">
+        <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" fill="#fff" stroke="#333"/><rect x="6" y="8" width="8" height="6" fill="#ffb84d"/><circle cx="16" cy="12" r="2" fill="#ff7fb1"/></svg></div>
+        <h4>视觉关卡</h4>
+        <p>设计招新海报、活动物料与校园视觉，负责视觉统筹与排版制作，打造宣传部的"门面担当"，让每一张图都足够吸睛。</p>
+      </div>
+      <div class="task-tile">
+        <div class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="13" fill="#fff" stroke="#333"/><rect x="6" y="9" width="8" height="4" fill="#8ec6f0"/><rect x="15" y="9" width="3" height="3" fill="#ff7fb1"/><rect x="9" y="15" width="6" height="2" fill="#ffb84d"/></svg></div>
+        <h4>新媒体副本</h4>
+        <p>运营公众号与短视频平台，负责文案策划、排版发布与内容选题，让校园动态被更多玩家看见、记住。</p>
+      </div>
+      <div class="task-tile">
+        <div class="ic"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="9" fill="#8a5ed6"/><rect x="8" y="6" width="8" height="5" fill="#fff"/><rect x="4" y="12" width="8" height="8" fill="#5fbf70"/><rect x="13" y="12" width="8" height="8" fill="#ff7fb1"/><rect x="14" y="14" width="6" height="4" fill="#fff"/></svg></div>
+        <h4>拍摄支援</h4>
+        <p>参与活动拍摄与视频剪辑，联动学生会其他阵营，记录晚会、赛事等大型活动的精彩瞬间，做好现场支持。</p>
+      </div>
+    </div>
+    <div class="pagerow"><button class="btn-nav" onclick="go('#intro')">上一章 · 成员介绍</button><button class="btn-nav alt" onclick="go('#scenery')">下一章 · 风光实录</button></div>
+  </div>
+</section>
+
+<!-- ===== 视图：阵营风光实录（福利 + 日常） ===== -->
+<section class="view" id="scenery">
+  <div class="sky-bg"><div class="gnd"></div></div>
+  <div class="page-head">
+    <div class="head-title"><span class="heart">♥</span>阵营风光实录<span class="heart">♥</span></div>
+    <div class="head-en">PART THREE · CAMPUS LIFE</div>
+  </div>
+  <div class="screen-inner">
+    <div class="page-head" style="padding-top:0;">
+      <div class="head-title" style="font-size:clamp(22px,4vw,32px);"><span class="heart">♥</span>阵营福利<span class="heart">♥</span></div>
+    </div>
+    <div class="tv-grid stagger">
+      <div class="tv"><div class="tv-tit">团建活动</div><div class="screen"><div class="ph" style="background:linear-gradient(#ffd9c2,#ffb84d);display:flex;align-items:center;justify-content:center;"><span style="font-size:12px;font-family:'Press Start 2P';color:#332b4a;">T.T</span></div></div><div class="ctrl"><span class="g"></span><span class="o"></span></div></div>
+      <div class="tv"><div class="tv-tit">零食奶茶</div><div class="screen"><div class="ph" style="background:linear-gradient(#ffc4e0,#ff9ec3);display:flex;align-items:center;justify-content:center;"><span style="font-size:12px;font-family:'Press Start 2P';color:#332b4a;">TEA</span></div></div><div class="ctrl"><span class="g"></span><span class="o"></span></div></div>
+    </div>
+
+    <div class="page-head" style="padding-top:52px;">
+      <div class="head-title" style="font-size:clamp(22px,4vw,32px);"><span class="heart">♥</span>阵营日常<span class="heart">♥</span></div>
+    </div>
+    <div class="daily-grid stagger">
+      <div class="daily-window">
+        <div class="bar"><span>部门联谊</span><span class="btns"><i></i><i></i><i></i></span></div>
+        <div class="body" style="background:linear-gradient(#c8e6c9,#a5d6a7);display:flex;align-items:center;justify-content:center;"><span style="font-family:'Press Start 2P';font-size:12px;color:#2e5f3a;">FUN</span></div>
+      </div>
+      <div class="daily-window">
+        <div class="bar"><span>志愿服务</span><span class="btns"><i></i><i></i><i></i></span></div>
+        <div class="body" style="background:linear-gradient(#ffe0b2,#ffcc80);display:flex;align-items:center;justify-content:center;"><span style="font-family:'Press Start 2P';font-size:12px;color:#7a4f0d;">HELP</span></div>
+      </div>
+      <div class="daily-window">
+        <div class="bar"><span>主题会议</span><span class="btns"><i></i><i></i><i></i></span></div>
+        <div class="body" style="background:linear-gradient(#d1c4e9,#b39ddb);display:flex;align-items:center;justify-content:center;"><span style="font-family:'Press Start 2P';font-size:12px;color:#4a3a70;">MEET</span></div>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:22px;font-size:13px;color:var(--muted);">在这里，干活、玩耍、成长三不误</p>
+    <div class="pagerow"><button class="btn-nav" onclick="go('#tasks')">上一章 · 任务介绍</button><button class="btn-nav alt" onclick="go('#recruit')">下一章 · 招募冒险家</button></div>
+  </div>
+</section>
+
+<!-- ===== 视图：招募冒险家（奖励 + 条件 + 加入） ===== -->
+<section class="view" id="recruit">
+  <div class="sky-bg"><div class="gnd"></div></div>
+  <div class="page-head">
+    <div class="head-title"><span class="heart">♥</span>招募冒险家<span class="heart">♥</span></div>
+    <div class="head-en">PART FOUR · JOIN US</div>
+  </div>
+  <div class="screen-inner">
+
+    <div class="head-title" style="font-size:clamp(22px,4vw,32px);justify-content:center;display:flex;margin-bottom:6px;"><span class="heart">♥</span>通关奖励<span class="heart">♥</span></div>
+    <div class="reward-list stagger">
+      <div class="reward-item"><span class="rk">社交成就</span><div><b>解锁珍贵友谊</b><p>结识前辈队友，告别单机校园，解锁属于你的宣传人脉圈。</p></div></div>
+      <div class="reward-item"><span class="rk">活动权限</span><div><b>参与策划校园活动</b><p>拥有参与、策划各类校园活动副本的权限，体验感直线升级。</p></div></div>
+      <div class="reward-item"><span class="rk">属性提升</span><div><b>技能飞速升级</b><p>沟通、排版、摄影、文案处理的技能持续加成，养成进度更快。</p></div></div>
+      <div class="reward-item"><span class="rk">实质增益</span><div><b>综测与志愿时长</b><p>解锁综测分、志愿时长 buff，让成长留下实打实的足迹。</p></div></div>
+    </div>
+
+    <div class="head-title" style="font-size:clamp(22px,4vw,32px);justify-content:center;display:flex;margin:46px 0 6px;"><span class="heart">♥</span>招募条件<span class="heart">♥</span></div>
+    <div class="cond-list stagger">
+      <div class="cond-bubble"><span class="cond-num">要求一</span><b>拥有责任心</b>，做任务细心耐心，不摆烂！</div>
+      <div class="cond-bubble"><span class="cond-num">要求二</span><b>擅长对话交互</b>，愿意耐心服务全体校园玩家！</div>
+      <div class="cond-bubble"><span class="cond-num">要求三</span><b>会主动思考</b>，拥有自主探索任务的积极性！</div>
+    </div>
+
+    <div class="head-title" style="font-size:clamp(22px,4vw,32px);justify-content:center;display:flex;margin:46px 0 6px;"><span class="heart">♥</span>加入阵营<span class="heart">♥</span></div>
+    <div class="join-wrap stagger">
+      <div class="join-panel">
+        <h3>欢迎注册加入宣传部</h3>
+        <div class="info">
+          <div><b>副本上线时间：</b>2026年X月 - X月</div>
+          <div><b>副本开启地点：</b>综合楼302室</div>
+          <div style="margin-top:8px;color:var(--muted);font-size:13px;">带好你的热情与脑洞，来现场解锁招新副本。</div>
+        </div>
+      </div>
+      <div class="qr-box">
+        <div class="qr" id="qr"></div>
+        <div class="qr-tip">扫描二维码<br>加入招新咨询群</div>
+        <button class="btn-join" onclick="toast('报名信息已提交（演示）')">立即报名</button>
+      </div>
+    </div>
+    <div class="pagerow"><button class="btn-nav" onclick="go('#scenery')">上一章 · 风光实录</button><button class="btn-nav alt" onclick="go('#levels')">返回关卡</button></div>
+  </div>
+</section>
+
+<!-- 底部任务栏导航 -->
+<div class="taskbar">
+  <button class="start-btn" onclick="go('#home')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" fill="#ff7fb1"/><rect x="13" y="3" width="8" height="8" fill="#8ec6f0"/><rect x="3" y="13" width="8" height="8" fill="#9ce0a0"/><rect x="13" y="13" width="8" height="8" fill="#ffd98a"/></svg><span>主页</span></button>
+  <nav>
+    <a class="nav-link" href="#levels" data-nav="levels">关卡</a>
+    <a class="nav-link" href="#intro" data-nav="intro">阵营介绍</a>
+    <a class="nav-link" href="#tasks" data-nav="tasks">任务介绍</a>
+    <a class="nav-link" href="#scenery" data-nav="scenery">风光实录</a>
+    <a class="nav-link" href="#recruit" data-nav="recruit">招募冒险家</a>
+  </nav>
+  <div class="tray"><span class="mini"></span><span class="clock" id="clock">--:--</span></div>
+</div>
+
+<script>
+/* ===== hash 路由：多页跳转 ===== */
+var VIEWS=["home","levels","intro","tasks","scenery","recruit"];
+function route(){
+  var h=location.hash.replace('#','')||'home';
+  if(VIEWS.indexOf(h)<0)h='home';
+  // 切换视图
+  document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
+  document.getElementById(h).classList.add('active');
+  // 高亮导航
+  document.querySelectorAll('.nav-link').forEach(function(a){
+    a.classList.toggle('on',a.getAttribute('data-nav')===h);
+  });
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',route);
+
+/* 带加载转场跳转 */
+function go(h){
+  var sp=document.getElementById('splash');
+  sp.classList.add('show');
+  setTimeout(function(){
+    location.hash=h;
+    sp.classList.remove('show');
+  },520);
+}
+
+/* 时钟 */
+function tick(){
+  var d=new Date();
+  var p=function(n){return n<10?'0'+n:n;};
+  document.getElementById('clock').textContent=p(d.getHours())+':'+p(d.getMinutes());
+}
+setInterval(tick,1000);tick();
+
+/* 二维码占位（像素棋盘） */
+(function(){
+  var q=document.getElementById('qr');
+  if(!q)return;
+  var cells='';
+  for(var i=0;i<121;i++){
+    var on=((i*7)%13<6)&&((i%11)>1);
+    cells+='<i class="'+(on?'':'blank')+'"></i>';
+  }
+  q.innerHTML=cells;
+})();
+
+/* Toast 反馈（避免僵尸按钮） */
+var toastEl=null;
+function toast(msg){
+  if(!toastEl){
+    toastEl=document.createElement('div');
+    toastEl.style.cssText='position:fixed;left:50%;bottom:74px;transform:translateX(-50%);z-index:300;background:var(--purple2);color:#fff;font-weight:900;font-size:13px;padding:10px 18px;border:3px solid #332b4a;box-shadow:3px 3px 0 #332b4a;';
+    document.body.appendChild(toastEl);
+  }
+  toastEl.textContent=msg;
+  toastEl.style.opacity='1';
+  clearTimeout(toastEl._t);
+  toastEl._t=setTimeout(function(){toastEl.style.opacity='0';},1800);
+}
+
+route();
+</script>
+</body>
+</html>
